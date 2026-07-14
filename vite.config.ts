@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// For GitHub Pages project sites the app is served from /<repo>/.
-// Override with VITE_BASE if you deploy elsewhere (root, Netlify, Vercel ...).
-const base = process.env.VITE_BASE ?? '/einverst-ndniss-erkl-rung-tattoo/'
+// Relative base so assets resolve no matter which sub-path (or letter case)
+// the site is served from — GitHub Pages serves this repo under a mixed-case
+// path. Works together with the app's HashRouter. Override with VITE_BASE if
+// you deploy to a fixed root (e.g. a custom domain).
+const base = process.env.VITE_BASE ?? './'
 
 export default defineConfig({
   base,
