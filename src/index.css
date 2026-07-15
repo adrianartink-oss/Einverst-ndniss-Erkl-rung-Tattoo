@@ -55,7 +55,7 @@ body {
       bg-transparent text-ink-200 hover:bg-ink-800;
   }
   .input {
-    @apply w-full rounded-xl bg-ink-950/60 border border-ink-700 px-4 py-3 text-ink-50
+    @apply w-full min-h-[3.125rem] rounded-xl bg-ink-950/60 border border-ink-700 px-4 py-3 text-ink-50
       placeholder-ink-400 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/30;
   }
   .label {
@@ -65,3 +65,30 @@ body {
     @apply border-red-500/80 focus:border-red-500 focus:ring-red-500/30;
   }
 }
+
+/*
+ * iOS/Safari renders <input type="date"> as a taller native control with a
+ * centered value, which makes date fields look bigger than text fields and
+ * appear to overlap neighbours. Normalise them to match .input exactly.
+ */
+input[type='date'],
+input[type='datetime-local'] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  height: 3.125rem; /* pin to the same height as text .input fields */
+}
+
+input[type='date']::-webkit-date-and-time-value,
+input[type='datetime-local']::-webkit-date-and-time-value {
+  text-align: left;
+  margin: 0;
+}
+
+/* Keep the picker indicator subtle and consistent (desktop / non-iOS). */
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
