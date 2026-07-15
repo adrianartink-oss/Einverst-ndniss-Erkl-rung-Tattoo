@@ -202,6 +202,10 @@ const pt: TranslationSchema = {
     clear: 'Limpar',
     mustSign: 'Por favor, assine.',
     summaryTitle: 'Resumo',
+    activate: 'Adicionar assinatura',
+    activateHint: 'Toque no campo e assine com o dedo ou o Apple Pencil',
+    change: 'Alterar',
+    confirmed: 'Confirmada',
   },
   validation: {
     fixErrors: 'Preencha os campos obrigatórios assinalados.',

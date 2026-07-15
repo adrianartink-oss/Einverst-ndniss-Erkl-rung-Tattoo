@@ -202,6 +202,10 @@ const en: TranslationSchema = {
     clear: 'Clear',
     mustSign: 'Please sign.',
     summaryTitle: 'Summary',
+    activate: 'Add signature',
+    activateHint: 'Tap the field and sign with your finger or Apple Pencil',
+    change: 'Change',
+    confirmed: 'Confirmed',
   },
   validation: {
     fixErrors: 'Please complete the highlighted required fields.',

@@ -586,27 +586,96 @@ function SignatureField({
 }) {
   const { t } = useTranslation()
   const ref = useRef<SignaturePadHandle>(null)
+  const [active, setActive] = useState(false)
+  const [hasInk, setHasInk] = useState(false)
+
+  const startDrawing = () => {
+    setHasInk(false)
+    setActive(true)
+  }
+  const clearPad = () => {
+    ref.current?.clear()
+    setHasInk(false)
+  }
+  const confirm = () => {
+    if (!ref.current || ref.current.isEmpty()) return
+    onChange(ref.current.toDataURL())
+    setHasInk(false)
+    setActive(false)
+  }
+  const redo = () => {
+    onChange('')
+    setHasInk(false)
+    setActive(true)
+  }
+
   return (
     <div>
-      <div className="mb-1.5 flex items-center justify-between">
-        <span className="label mb-0">{label} <span className="text-rose-500">*</span></span>
+      <div className="label mb-1.5">
+        {label} <span className="text-rose-500">*</span>
+      </div>
+
+      {/* Confirmed */}
+      {value && !active && (
+        <div className="space-y-2">
+          <div
+            className={`rounded-xl border-2 bg-white p-2 ${
+              invalid ? 'border-red-400' : 'border-emerald-500/60'
+            }`}
+          >
+            <img src={value} alt={label} className="mx-auto h-40 object-contain" />
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="inline-flex items-center gap-1 font-medium text-emerald-400">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3">
+                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {t('signatures.confirmed')}
+            </span>
+            <button type="button" className="btn-ghost ml-auto px-3 py-1.5 text-sm" onClick={redo}>
+              {t('signatures.change')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Idle — the field must be activated on purpose */}
+      {!value && !active && (
         <button
           type="button"
-          className="text-xs font-medium text-ink-400 hover:text-rose-400"
-          onClick={() => {
-            ref.current?.clear()
-            onChange('')
-          }}
+          onClick={startDrawing}
+          className={`flex h-56 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed bg-ink-950/30 px-4 text-center transition hover:border-rose-500 hover:text-rose-300 ${
+            invalid ? 'border-red-400 text-red-300' : 'border-ink-600 text-ink-300'
+          }`}
         >
-          {t('signatures.clear')}
+          <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <path d="M12 19l7-7 3 3-7 7-3-3z" />
+            <path d="M18 13l-1.5-1.5" />
+            <path d="M2 21l4-1 12.5-12.5a2.12 2.12 0 00-3-3L3 17l-1 4z" />
+          </svg>
+          <span className="font-medium">{t('signatures.activate')}</span>
+          <span className="text-xs text-ink-500">{t('signatures.activateHint')}</span>
         </button>
-      </div>
-      {value ? (
-        <div className={`rounded-xl border-2 bg-white p-2 ${invalid ? 'border-red-400' : 'border-ink-400'}`}>
-          <img src={value} alt={label} className="mx-auto h-40 object-contain" />
+      )}
+
+      {/* Drawing — lifting the pen does NOT save; user confirms explicitly */}
+      {active && (
+        <div className="space-y-2">
+          <SignaturePad ref={ref} invalid={invalid} onInkChange={setHasInk} />
+          <div className="flex items-center gap-2">
+            <button type="button" className="btn-ghost px-3 py-1.5 text-sm" onClick={clearPad} disabled={!hasInk}>
+              {t('signatures.clear')}
+            </button>
+            <button
+              type="button"
+              className="btn-primary ml-auto px-5 py-1.5 text-sm"
+              onClick={confirm}
+              disabled={!hasInk}
+            >
+              {t('common.confirm')}
+            </button>
+          </div>
         </div>
-      ) : (
-        <SignaturePad ref={ref} invalid={invalid} onEnd={() => onChange(ref.current?.toDataURL() ?? '')} />
       )}
     </div>
   )

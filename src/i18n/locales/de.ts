@@ -201,6 +201,10 @@ const de = {
     clear: 'Löschen',
     mustSign: 'Bitte unterschreiben.',
     summaryTitle: 'Zusammenfassung',
+    activate: 'Unterschrift hinzufügen',
+    activateHint: 'Feld antippen und mit Finger oder Apple Pencil unterschreiben',
+    change: 'Ändern',
+    confirmed: 'Bestätigt',
   },
   validation: {
     fixErrors: 'Bitte fülle die markierten Pflichtfelder aus.',
